@@ -4,7 +4,7 @@ metadata:
   name: loadbalancerip-mutator
 build:
   artifacts:
-    - image: <image name>
+    - image: ghcr.io/sshota0809/loadbalancerip-mutator
       context: ../
       docker:
         dockerfile: docker/Dockerfile

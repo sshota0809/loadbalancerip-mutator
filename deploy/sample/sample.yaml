@@ -58,7 +58,7 @@ spec:
       serviceAccountName: loadbalancerip-mutator
       containers:
         - name: loadbalancerip-mutator
-          image: <image>
+          image: ghcr.io/sshota0809/loadbalancerip-mutator:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
