@@ -1,0 +1,23 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: "{{ .Release.Name }}-webhook"
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Values.mutationWebhook.caBundle }}
+webhooks:
+  - name: "{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local"
+    failurePolicy: {{ .Values.mutationWebhook.failurePolicy }}
+    rules:
+      - apiGroups: [""]
+        operations: ["CREATE", "UPDATE"]
+        apiVersions: ["v1"]
+        resources: ["services"]
+        scope: "Namespaced"
+    clientConfig:
+      service:
+        namespace: {{ .Release.Namespace }}
+        name: {{ .Release.Name }}
+        path: /mutate
+    admissionReviewVersions: ["v1", "v1beta1"]
+    timeoutSeconds: {{ .Values.mutationWebhook.timeoutSeconds }}
+    sideEffects: None

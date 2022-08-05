@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+kind: Deployment
+spec:
+  replicas: {{ .Values.container.replicas }}
+  template:
+    metadata:
+      labels:
+        name: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ .Release.Name }}
+      containers:
+        - name: loadbalancerip-mutator
+          image: {{ .Values.container.image.name }}:{{ .Values.container.image.tag }}
+          imagePullPolicy: {{ .Values.container.imagePullPolicy }}
+          ports:
+            - containerPort: 8080
+          startupProbe:
+            httpGet:
+              port: 8080
+              path: /health
+              scheme: HTTPS
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /health
+              scheme: HTTPS
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          volumeMounts:
+            - name: webhook-certificate
+              mountPath: {{ .Values.cert.mountPath }}
+          args:
+            - "--pool"
+            - {{ join "," .Values.ip.pools | quote }}
+            - "-v"
+            - {{ .Values.logLevel | quote }}
+            - "--tls-key-file"
+            - {{ .Values.cert.mountPath }}/{{ .Values.cert.tls.key }}
+            - "--tls-cert-file"
+            - {{ .Values.cert.mountPath }}/{{ .Values.cert.tls.cert }}
+      volumes:
+        - name: webhook-certificate
+          secret:
+            secretName: {{ .Values.cert.secret.name }}
+            defaultMode: 0644
+  selector:
+    matchLabels:
+      name: {{ .Release.Name }}

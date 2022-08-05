@@ -1,0 +1,21 @@
+ip:
+  pools:
+    - 10.101.20.168/29
+logLevel: debug
+cert:
+  secret:
+    name: webhook-certificate
+  mountPath: /etc/cert
+  tls:
+    key: tls.key
+    cert: tls.crt
+container:
+  replicas: 1
+  imagePullPolicy: IfNotPresent
+  image:
+    name: ghcr.io/sshota0809/loadbalancerip-mutator
+    tag: latest
+mutationWebhook:
+  caBundle: loadbalancerip-mutator/webhook-certificate # inject caBundle through cert-manager
+  failurePolicy: Fail
+  timeoutSeconds: 10
