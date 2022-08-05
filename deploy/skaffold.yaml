@@ -1,0 +1,22 @@
+apiVersion: skaffold/v2beta25
+kind: Config
+metadata:
+  name: loadbalancerip-mutator
+build:
+  artifacts:
+    - image: <image name>
+      context: ../
+      docker:
+        dockerfile: docker/Dockerfile
+  local:
+    push: false
+    useBuildkit: true
+
+profiles:
+  - name: release
+    build:
+      tagPolicy:
+        gitCommit:
+          ignoreChanges: true
+      local:
+        push: true
