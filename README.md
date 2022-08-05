@@ -26,7 +26,17 @@ Flags:
 Mutation webhook needs to be attached TLS certificate. I can recommend to use [cert-manager](https://github.com/cert-manager/cert-manager) to manage it. Once you prepare TLS certificate you can deploy loadbalancerip-mutator through helm. Here is a helmfile example.
 
 ```
-helmfile example
+repositories:
+  - name: loadbalancerip-mutator
+    url: https://sshota0809.github.io/loadbalancerip-mutator
+
+releases:
+  - name: loadbalancerip-mutator
+    namespace: loadbalancerip-mutator
+    chart: loadbalancerip-mutator/loadbalancerip-mutator
+    version: 0.1.0
 ```
 
-## Misc
+## LICENSE
+
+[MIT](LICENSE)
