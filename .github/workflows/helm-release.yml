@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  release:
+  helm-release:
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -32,3 +32,4 @@ jobs:
           charts_dir: deploy
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          CR_RELEASE_NAME_TEMPLATE: "helm-chart-{{ .Version }}"
