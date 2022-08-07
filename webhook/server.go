@@ -7,22 +7,20 @@ import (
 	"net/http"
 )
 
-const (
-	port = ":8080"
-)
-
 type certConfig struct {
 	certFile string
 	keyFile  string
 }
 
 type webhookServer struct {
+	port       int
 	certConfig *certConfig
 	Mutator    mutation.Mutator
 }
 
-func NewWebhookServer(tlsCertFile, tlsKeyFile string, handler mutation.Mutator) (*webhookServer, error) {
+func NewWebhookServer(port int, tlsCertFile, tlsKeyFile string, handler mutation.Mutator) (*webhookServer, error) {
 	return &webhookServer{
+		port: port,
 		certConfig: &certConfig{
 			certFile: tlsCertFile,
 			keyFile:  tlsKeyFile,
@@ -37,11 +35,11 @@ func (ws *webhookServer) Run() error {
 		return err
 	}
 
-	logger.Log.Info(fmt.Sprintf("Listening on %s", port))
+	logger.Log.Info(fmt.Sprintf("Listening on %d", ws.port))
 	mux := http.NewServeMux()
 	mux.Handle("/mutate", h)
 	mux.Handle("/health", ws)
-	err = http.ListenAndServeTLS(port, ws.certConfig.certFile, ws.certConfig.keyFile, mux)
+	err = http.ListenAndServeTLS(fmt.Sprintf(":%d", ws.port), ws.certConfig.certFile, ws.certConfig.keyFile, mux)
 	if err != nil {
 		return err
 	}
