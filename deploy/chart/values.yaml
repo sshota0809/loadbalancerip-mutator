@@ -2,6 +2,7 @@ ip:
   pools:
     - 10.101.20.168/29
 logLevel: debug
+port: 8080
 cert:
   secret:
     name: webhook-certificate

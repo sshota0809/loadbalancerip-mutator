@@ -16,10 +16,10 @@ spec:
           image: {{ .Values.container.image.name }}:{{ .Values.container.image.tag }}
           imagePullPolicy: {{ .Values.container.imagePullPolicy }}
           ports:
-            - containerPort: 8080
+            - containerPort: {{ .Values.port }}
           startupProbe:
             httpGet:
-              port: 8080
+              port: {{ .Values.port }}
               path: /health
               scheme: HTTPS
             initialDelaySeconds: 10
@@ -28,7 +28,7 @@ spec:
             failureThreshold: 3
           livenessProbe:
             httpGet:
-              port: 8080
+              port: {{ .Values.port }}
               path: /health
               scheme: HTTPS
             periodSeconds: 5
@@ -42,6 +42,8 @@ spec:
             - {{ join "," .Values.ip.pools | quote }}
             - "-v"
             - {{ .Values.logLevel | quote }}
+            - "--port"
+            - {{ .Values.port | quote }}
             - "--tls-key-file"
             - {{ .Values.cert.mountPath }}/{{ .Values.cert.tls.key }}
             - "--tls-cert-file"
