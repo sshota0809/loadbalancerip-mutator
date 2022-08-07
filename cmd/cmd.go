@@ -21,6 +21,8 @@ var (
 
 			logger.Log.Info("Starting server...")
 
+			port, _ := cmd.Flags().GetInt("port")
+
 			tlsCertFile, _ := cmd.Flags().GetString("tls-cert-file")
 			if tlsCertFile == "" {
 				logger.Log.Error("The tls-cert-file option is not specified but required.")
@@ -45,7 +47,7 @@ var (
 				os.Exit(1)
 			}
 
-			ws, err := webhook.NewWebhookServer(tlsCertFile, tlsKeyFile, h)
+			ws, err := webhook.NewWebhookServer(port, tlsCertFile, tlsKeyFile, h)
 			if err != nil {
 				logger.Log.Error(err.Error())
 				os.Exit(1)
@@ -71,4 +73,5 @@ func init() {
 	rootCmd.Flags().StringP("pool", "p", "", "[REQUIRED] specify ip pool that will be attached through this MutationWebhook. Valid value is comma separated CIDR list e.g. \"10.10.100.10/32,10.10.10.128/25,10.10.100.0/24\"")
 	rootCmd.Flags().StringP("tls-cert-file", "c", "", "[REQUIRED] path of TLS cert file")
 	rootCmd.Flags().StringP("tls-key-file", "k", "", "[REQUIRED] path of TLS key file")
+	rootCmd.Flags().IntP("port", "P", 8080, "[OPTIONAL] port number to listen")
 }
