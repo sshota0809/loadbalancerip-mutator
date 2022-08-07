@@ -17,6 +17,7 @@ Flags:
   -h, --help                   help for loadbalancerip-mutator
   -v, --level string           [OPTIONAL] Log level. Valid value is debug, info, warn and error (default "info")
   -p, --pool string            [REQUIRED] specify ip pool that will be attached through this MutationWebhook. Valid value is comma separated CIDR list e.g. "10.10.100.10/32,10.10.10.128/25,10.10.100.0/24"
+  -P, --port int               [OPTIONAL] port number to listen (default 8080)
   -c, --tls-cert-file string   [REQUIRED] path of TLS cert file
   -k, --tls-key-file string    [REQUIRED] path of TLS key file
 ```
