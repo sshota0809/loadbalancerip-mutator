@@ -7,17 +7,23 @@ import (
 	"strings"
 )
 
+type IpAddr string
+
+func (ip IpAddr) ToString() string {
+	return string(ip)
+}
+
 type IsUsed bool
 
 type IPPool struct {
-	IPs map[string]IsUsed
+	IPs map[IpAddr]IsUsed
 }
 
 func NewIpPool(pool string) (*IPPool, error) {
 	// split string that is specified by option to cidrList
 	cidrList := strings.Split(pool, ",")
 
-	ips := map[string]IsUsed{}
+	ips := map[IpAddr]IsUsed{}
 	for _, cidr := range cidrList {
 		ipList, err := generateIPList(cidr)
 		if err != nil {
@@ -27,7 +33,7 @@ func NewIpPool(pool string) (*IPPool, error) {
 		logger.Log.Debug(fmt.Sprintf("IP list in pool: [%s] %s", cidr, strings.Join(ipList, ",")))
 		// initialize map of IPs
 		for _, ip := range ipList {
-			ips[ip] = false
+			ips[IpAddr(ip)] = false
 		}
 	}
 

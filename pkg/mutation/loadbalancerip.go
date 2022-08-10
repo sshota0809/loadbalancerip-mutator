@@ -71,8 +71,8 @@ func (h *LoadBalancerIpMutator) GenerateHandler() (http.Handler, error) {
 	return whHandler, nil
 }
 
-func (h *LoadBalancerIpMutator) getAvailableIP() (string, error) {
-	none := ""
+func (h *LoadBalancerIpMutator) getAvailableIP() (ip.IpAddr, error) {
+	var none ip.IpAddr = ""
 
 	// get services from all namespaces
 	services, err := h.ClientSet.CoreV1().Services(metav1.NamespaceAll).List(context.Background(), metav1.ListOptions{})
@@ -81,25 +81,25 @@ func (h *LoadBalancerIpMutator) getAvailableIP() (string, error) {
 	}
 
 	// deepCopy ipPool.IPs
-	ips := make(map[string]ip.IsUsed)
-	for ip, _ := range h.ipPool.IPs {
-		ips[ip] = false
+	ips := make(map[ip.IpAddr]ip.IsUsed)
+	for ipAddr, _ := range h.ipPool.IPs {
+		ips[ipAddr] = false
 	}
 
 	// Check if IP addr is attached to existing Service resource as loadBalancerIP
 	for _, service := range services.Items {
 		if service.Spec.LoadBalancerIP != "" {
-			ips[service.Spec.LoadBalancerIP] = true
+			ips[ip.IpAddr(service.Spec.LoadBalancerIP)] = true
 		}
 	}
 
 	// extract first IP addr that is not used yet
-	var availableIP string
-	for ip, isUsed := range ips {
+	var availableIP ip.IpAddr
+	for ipAddr, isUsed := range ips {
 		if isUsed {
 			continue
 		}
-		availableIP = ip
+		availableIP = ipAddr
 		break
 	}
 
@@ -134,6 +134,6 @@ func (h *LoadBalancerIpMutator) mutate(_ context.Context, _ *kwhmodel.AdmissionR
 
 	logger.Log.Info(fmt.Sprintf("Attaching %s as available IP addr to %s.", availableIP, service.GetName()))
 
-	service.Spec.LoadBalancerIP = availableIP
+	service.Spec.LoadBalancerIP = availableIP.ToString()
 	return &kwhmutating.MutatorResult{MutatedObject: service}, nil
 }
