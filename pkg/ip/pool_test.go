@@ -1,7 +1,6 @@
-package ip_test
+package ip
 
 import (
-	"github.com/sshota0809/loadbalancerip-mutator/pkg/ip"
 	"github.com/sshota0809/loadbalancerip-mutator/pkg/logger"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -15,13 +14,13 @@ func TestNewIpPool(t *testing.T) {
 	tests := []struct {
 		description string
 		pool        string
-		expIPList   []ip.IpAddr
+		expIPList   []IpAddr
 		expErr      error
 	}{
 		{
 			description: "Valid format single CIDR",
 			pool:        "10.10.10.240/29",
-			expIPList: []ip.IpAddr{
+			expIPList: []IpAddr{
 				"10.10.10.240",
 				"10.10.10.241",
 				"10.10.10.242",
@@ -36,12 +35,12 @@ func TestNewIpPool(t *testing.T) {
 		{
 			description: "Invalid format single CIDR",
 			pool:        "10.10.10.240/33",
-			expErr:      &ip.CidrFormatError{},
+			expErr:      &CidrFormatError{},
 		},
 		{
 			description: "Valid format multi CIDR",
 			pool:        "10.10.10.240/29,10.10.10.10/32",
-			expIPList: []ip.IpAddr{
+			expIPList: []IpAddr{
 				"10.10.10.10",
 				"10.10.10.240",
 				"10.10.10.241",
@@ -57,7 +56,7 @@ func TestNewIpPool(t *testing.T) {
 		{
 			description: "Invalid format multi CIDR",
 			pool:        "10.10.10.240/32,10.10.10.241/34",
-			expErr:      &ip.CidrFormatError{},
+			expErr:      &CidrFormatError{},
 		},
 	}
 
@@ -65,14 +64,14 @@ func TestNewIpPool(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.description, func(t *testing.T) {
-			pool, err := ip.NewIpPool(tt.pool)
+			pool, err := NewIpPool(tt.pool)
 
 			if err != nil {
 				assert.ErrorAs(t, err, &tt.expErr, "Error should be equal to expErr")
 				return
 			}
 
-			var ipList []ip.IpAddr
+			var ipList []IpAddr
 			for ipAddr, _ := range pool.IPs {
 				ipList = append(ipList, ipAddr)
 			}
