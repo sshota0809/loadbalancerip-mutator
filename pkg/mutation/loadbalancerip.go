@@ -23,8 +23,7 @@ const (
 
 type LoadBalancerIpMutator struct {
 	ipPool    *ip.IPPool
-	handler   http.Handler
-	ClientSet *kubernetes.Clientset
+	ClientSet kubernetes.Interface
 }
 
 func NewLoadBalancerIpHandler(pool string) (*LoadBalancerIpMutator, error) {
