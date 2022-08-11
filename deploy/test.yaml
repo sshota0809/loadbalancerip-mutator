@@ -1,0 +1,182 @@
+---
+# Source: loadbalancerip-mutator/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test
+spec:
+  selector:
+    name: test
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8080
+  type: LoadBalancer
+---
+# Source: loadbalancerip-mutator/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test1
+spec:
+  selector:
+    name: test
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8080
+  type: LoadBalancer
+---
+# Source: loadbalancerip-mutator/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test11
+spec:
+  selector:
+    name: test
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8080
+  type: LoadBalancer
+---
+# Source: loadbalancerip-mutator/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test111
+spec:
+  selector:
+    name: test
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8080
+  type: LoadBalancer
+---
+# Source: loadbalancerip-mutator/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test1111
+spec:
+  selector:
+    name: test
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8080
+  type: LoadBalancer
+---
+# Source: loadbalancerip-mutator/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test11111
+spec:
+  selector:
+    name: test
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8080
+  type: LoadBalancer
+---
+# Source: loadbalancerip-mutator/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test111111
+spec:
+  selector:
+    name: test
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8080
+  type: LoadBalancer
+---
+# Source: loadbalancerip-mutator/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test2
+spec:
+  selector:
+    name: test
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8080
+  type: LoadBalancer
+---
+# Source: loadbalancerip-mutator/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test23
+spec:
+  selector:
+    name: test
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8080
+  type: LoadBalancer
+---
+# Source: loadbalancerip-mutator/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test34
+spec:
+  selector:
+    name: test
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8080
+  type: LoadBalancer
+---
+# Source: loadbalancerip-mutator/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test432
+spec:
+  selector:
+    name: test
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8080
+  type: LoadBalancer
+---
+# Source: loadbalancerip-mutator/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test421241
+spec:
+  selector:
+    name: test
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8080
+  type: LoadBalancer
+---
+# Source: loadbalancerip-mutator/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: test435453
+spec:
+  selector:
+    name: test
+  ports:
+    - protocol: TCP
+      port: 443
+      targetPort: 8080
+  type: LoadBalancer
