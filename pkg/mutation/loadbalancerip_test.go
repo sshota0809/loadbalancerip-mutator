@@ -1,7 +1,6 @@
 package mutation
 
 import (
-	"fmt"
 	"github.com/sshota0809/loadbalancerip-mutator/pkg/ip"
 	"github.com/sshota0809/loadbalancerip-mutator/pkg/logger"
 	"github.com/stretchr/testify/assert"
@@ -120,7 +119,6 @@ func TestGetAvailableIP(t *testing.T) {
 			}
 
 			availableIP, err := mutator.getAvailableIP()
-			fmt.Println(availableIP)
 			if err != nil {
 				assert.ErrorAs(t, err, &tt.expErr, "Error should be equal to expErr")
 				return
