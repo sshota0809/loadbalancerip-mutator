@@ -2,11 +2,13 @@ package e2e_test
 
 import (
 	"context"
+	"fmt"
 	certmanagerv1 "github.com/cert-manager/cert-manager/pkg/apis/certmanager/v1"
 	certmanagermmetav1 "github.com/cert-manager/cert-manager/pkg/apis/meta/v1"
 	certmanager "github.com/cert-manager/cert-manager/pkg/client/clientset/versioned"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	arv1 "k8s.io/api/admissionregistration/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
@@ -31,7 +33,7 @@ var (
 
 var _ = BeforeSuite(func() {
 	initK8sClients()
-
+	createMutationWebhook()
 })
 
 func initK8sClients() {
@@ -57,6 +59,7 @@ func createMutationWebhook() {
 	createIssuer("selfsigned", "webhook")
 	createCert("webhook-certificate", "webhook", "selfsigned")
 	createWebhook("webhook", "webhook", "webhook-certificate", "10.10.10.10/32")
+	createWebhookConfig("webhook", "webhook", "webhook-certificate")
 }
 
 func createNamespace(name string) {
@@ -230,4 +233,54 @@ func createWebhook(name, ns, cert, pool string) {
 	Expect(err).NotTo(HaveOccurred())
 }
 
-func int32Ptr(i int32) *int32 { return &i }
+func createWebhookConfig(name, ns, cert string) {
+	fp := arv1.Fail
+	spoce := arv1.NamespacedScope
+	es := arv1.SideEffectClassNone
+	mwc := &arv1.MutatingWebhookConfiguration{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: name,
+			Annotations: map[string]string{
+				"cert-manager.io/inject-ca-from": fmt.Sprintf("%s/%s", ns, cert),
+			},
+		},
+		Webhooks: []arv1.MutatingWebhook{
+			{
+				Name:          fmt.Sprintf("%s.%s.svc.cluster.local", name, ns),
+				FailurePolicy: &fp,
+				Rules: []arv1.RuleWithOperations{
+					{
+						Operations: []arv1.OperationType{
+							arv1.Create,
+							arv1.Update,
+						},
+						Rule: arv1.Rule{
+							APIGroups:   []string{""},
+							APIVersions: []string{"v1"},
+							Resources:   []string{"services"},
+							Scope:       &spoce,
+						},
+					},
+				},
+				ClientConfig: arv1.WebhookClientConfig{
+					Service: &arv1.ServiceReference{
+						Namespace: ns,
+						Name:      name,
+						Path:      stringPtr("/mutate"),
+					},
+				},
+				AdmissionReviewVersions: []string{
+					"v1",
+					"v1beta1",
+				},
+				TimeoutSeconds: int32Ptr(10),
+				SideEffects:    &es,
+			},
+		},
+	}
+	_, err := clientSet.AdmissionregistrationV1().MutatingWebhookConfigurations().Create(context.Background(), mwc, metav1.CreateOptions{})
+	Expect(err).NotTo(HaveOccurred())
+}
+
+func int32Ptr(i int32) *int32    { return &i }
+func stringPtr(s string) *string { return &s }
