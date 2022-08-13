@@ -29,7 +29,7 @@ var _ = Describe("e2e tests", func() {
 				LoadBalancerIP: "10.10.10.10",
 			},
 		}
-		_, err := k8sClientSet.CoreV1().Services("default").Create(context.Background(), svc, metav1.CreateOptions{})
+		_, err := clientSet.CoreV1().Services("default").Create(context.Background(), svc, metav1.CreateOptions{})
 		Expect(err).NotTo(HaveOccurred())
 	})
 })

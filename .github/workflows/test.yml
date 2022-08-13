@@ -61,6 +61,16 @@ jobs:
           kubectl version
           echo "current-context:" $(kubectl config current-context)
 
+      - name: Build
+        uses: hiberbee/github-action-skaffold@1.22.0
+        with:
+          working-directory: deploy/
+          command: build
+          tag: latest
+
+      - name: Upload built image to kind
+        run: kind load docker-image ghcr.io/sshota0809/loadbalancerip-mutator:latest
+
       - name: setup helmfile
         uses: mamezou-tech/setup-helmfile@v1.0.0
         with:
