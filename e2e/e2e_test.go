@@ -13,7 +13,6 @@ var _ = Describe("e2e tests", func() {
 		svc := &corev1.Service{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:        "svc01",
-				Namespace:   "ns01",
 				Annotations: map[string]string{},
 			},
 			Spec: corev1.ServiceSpec{
@@ -30,7 +29,7 @@ var _ = Describe("e2e tests", func() {
 				LoadBalancerIP: "10.10.10.10",
 			},
 		}
-		_, err := k8sClientSet.CoreV1().Services("").Create(context.Background(), svc, metav1.CreateOptions{})
+		_, err := k8sClientSet.CoreV1().Services("default").Create(context.Background(), svc, metav1.CreateOptions{})
 		Expect(err).NotTo(HaveOccurred())
 	})
 })
