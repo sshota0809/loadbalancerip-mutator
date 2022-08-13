@@ -51,9 +51,11 @@ jobs:
         with:
           version: v0.14.0
           kubectl_version: v1.22.10
+          node_image: kindest/node:v1.22.9
           cluster_name: e2e-test
       - name: kubectl test
         run: |
+          kind version
           kubectl cluster-info
           kubectl get node -o wide
           kubectl get pods -o wide -n kube-system
