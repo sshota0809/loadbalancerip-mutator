@@ -184,6 +184,11 @@ func createWebhook(name, ns, cert, pool string) {
 				},
 			},
 			Template: corev1.PodTemplateSpec{
+				ObjectMeta: metav1.ObjectMeta{
+					Labels: map[string]string{
+						"name": name,
+					},
+				},
 				Spec: corev1.PodSpec{
 					ServiceAccountName: name,
 					Containers: []corev1.Container{
