@@ -58,11 +58,22 @@ jobs:
         run: |
           kind version
           kubectl cluster-info
-          kubectl get node -o wide
-          kubectl get pods -o wide -n kube-system
           kubectl version
           echo "current-context:" $(kubectl config current-context)
-          echo "environment-kubeconfig:" ${KUBECONFIG}
+
+      - name: setup helmfile
+        uses: mamezou-tech/setup-helmfile@v1.0.0
+        with:
+          helmfile-version: 'v0.144.0'
+          helm-version: 'v3.9.0'
+
+      - name: install cert-manager
+        working-directory: e2e/resource/cert-manager
+        run: helmfile apply
+
+      - name: kubectl test
+        run: |
+          kubectl get ns
 
       - name: Test
         run: go test ./e2e -v
