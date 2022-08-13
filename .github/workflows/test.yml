@@ -86,6 +86,3 @@ jobs:
 
       - name: Test
         run: go test ./e2e -v
-
-      - name: Test
-        run: kubectl get pods -n webhook
