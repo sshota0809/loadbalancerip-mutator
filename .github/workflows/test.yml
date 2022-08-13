@@ -52,12 +52,11 @@ jobs:
           version: v0.14.0
           kubectl_version: v1.22.10
           node_image: kindest/node:v1.22.9
-          cluster_name: e2e-test
+          cluster_name: kind
 
       - name: kubectl test
         run: |
           kind version
-          kubectl cluster-info
           kubectl version
           echo "current-context:" $(kubectl config current-context)
 
