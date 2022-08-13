@@ -66,9 +66,5 @@ jobs:
         working-directory: e2e/resource/cert-manager
         run: helmfile apply
 
-      - name: kubectl test
-        run: |
-          kubectl get ns
-
       - name: E2E Test
         run: go test -v ./e2e
