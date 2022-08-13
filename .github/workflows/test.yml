@@ -27,13 +27,44 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: Build
+      - name: Build Test
         run: go build ./...
 
-#      - name: Lint
-#        uses: golangci/golangci-lint-action@v3
-#        with:
-#          version: v1.48.0
+      - name: Unit Test
+        run: go test -v `go list ./... | grep -v e2e`
 
-      - name: Test
-        run: go test ./... -v
+      - name: Set up Kind Cluster
+        uses: helm/kind-action@v1.3.0
+        with:
+          version: v0.14.0
+          kubectl_version: v1.22.10
+          node_image: kindest/node:v1.22.9
+          cluster_name: kind
+
+      - name: Info kind
+        run: |
+          kind version
+          kubectl version
+
+      - name: Build container image
+        uses: hiberbee/github-action-skaffold@1.22.0
+        with:
+          working-directory: deploy/
+          command: build
+          tag: latest
+
+      - name: Upload built image to kind
+        run: kind load docker-image ghcr.io/sshota0809/loadbalancerip-mutator:latest
+
+      - name: Setup helmfile
+        uses: mamezou-tech/setup-helmfile@v1.0.0
+        with:
+          helmfile-version: 'v0.144.0'
+          helm-version: 'v3.9.0'
+
+      - name: Install cert-manager
+        working-directory: e2e/resource/cert-manager
+        run: helmfile apply
+
+      - name: E2E Test
+        run: go test -v ./e2e
