@@ -2,6 +2,19 @@ apiVersion: v1
 entries:
   loadbalancerip-mutator:
   - apiVersion: v2
+    appVersion: v1.0.0
+    created: "2022-08-14T07:24:25.698879595Z"
+    description: Mutation Webhook that automatically attaches external IP to Service
+      resource
+    digest: 307e4ce9f47f0a9f44338355f87f118c36e5316383cfc495d9d7a2e806a6bd9c
+    home: https://github.com/sshota0809/loadbalancerip-mutator
+    name: loadbalancerip-mutator
+    sources:
+    - https://github.com/sshota0809/loadbalancerip-mutator
+    urls:
+    - https://github.com/sshota0809/loadbalancerip-mutator/releases/download/helm-chart-1.0.0/loadbalancerip-mutator-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v2
     appVersion: v0.2.0
     created: "2022-08-07T13:10:19.822974688Z"
     description: Mutation Webhook that automatically attaches external IP to Service
@@ -27,4 +40,4 @@ entries:
     urls:
     - https://github.com/sshota0809/loadbalancerip-mutator/releases/download/loadbalancerip-mutator-0.1.0/loadbalancerip-mutator-0.1.0.tgz
     version: 0.1.0
-generated: "2022-08-07T13:10:19.822981388Z"
+generated: "2022-08-14T07:24:25.698893295Z"
