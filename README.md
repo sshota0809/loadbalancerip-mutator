@@ -35,7 +35,7 @@ releases:
   - name: loadbalancerip-mutator
     namespace: loadbalancerip-mutator
     chart: loadbalancerip-mutator/loadbalancerip-mutator
-    version: 0.1.0
+    version: 1.0.0
 ```
 
 ## LICENSE
